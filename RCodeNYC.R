@@ -177,7 +177,7 @@ forSegment <- within (forSegment,   {
 })
 
 praxSeg    <- subset (mainData,
-                         booked == 0 & lengthStay < 69,
+                         booked == 1 & lengthStay < 69,
                          select = c (price,
                                      advPurch,
                                      lengthStay))
