@@ -53,6 +53,7 @@ col.classes =
     "character",
     "character",#checkinhdate
     "numeric", #advpurchase
+    "numeric", #lengthofstay 
     )
 
 ######################stopped here##############
