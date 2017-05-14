@@ -1,6 +1,3 @@
-
-
-
 #install packages
 install.packages("data.table")
 install.packages("mlogit")
@@ -9,18 +6,11 @@ install.packages("mlogit")
 ### Prevent the console from being frozen, ensures that the display of output in the console is current
 flush.console()
 
-## Directory settings
-# i dont think i am going to use this - olivia  
-#cur.dir       = file.path("Users", "oliviabuerkle", "Documents", "Hotel CCM", 
-sep = .Platform$file.sep
-#data.dir      = "data"
-#output.dir    = "output"
 
 ### Check and load packages
 library(data.table)
 library(mlogit)
-#library(glmnet)
-#library(survival)
+
 
 col.names = 
   c("propID",
@@ -33,7 +23,7 @@ col.names =
     "shopDate",
     "rating",
     "prefType",
-    "lon",
+    "long",
     "lat",
     "booked",
     "spotlight",
@@ -47,69 +37,55 @@ col.names =
     "breakfast",
     "restaurant",
     "parking")
+
 col.classes =
   c("character", #propID
-    "character",
-    "character",
-    "character",#checkinhdate
+    "character", #sessID
+    "character", #transID
+    "character",#checkindate
     "numeric", #advpurchase
-    "numeric", #lengthofstay 
-    )
-
-######################stopped here##############
-col.classes = 
-  c("character", #01.Rating
-    "character", #02.SessionId
-    "character", #03.TransactionId
-    "character", #04.City_Cd
-    "character", #05.Hotel_Chain
-    "character", #06.SpotLight_Member
-    "character", #07.SearchDate
-    "numeric",   #08.AdvPurch
-    "numeric",   #09.LengthStay
-    "character", #10.Prop_Code
-    "character", #11.BookedProp
-    "character", #12.CheckinDate
-    "numeric",   #13.PropCnt
-    "numeric",   #14.Property_Latitude
-    "numeric",   #15.Property_Longitude
-    "numeric",   #16.Booked
-    "numeric",   #17.Price
-    "numeric",   #18.NumProps_onScreen
-    "numeric",   #19.Line_Num
-    "numeric",   #20.SpotLight
-    "character", #21.AdvPurchCat
-    "character", #22.LengthStayCat
-    "numeric",   #23.Rating_Num
-    "numeric",   #24.Highest_LineNum_this_shop
-    "character", #25.MaxLineNum",
-    "numeric",   #26.Ratio2
-    "numeric",   #27.Num_Spot_Member
-    "numeric",   #28.NumSpot_Interaction
-    "numeric",   #29.Ratio
-    "numeric",   #30.NumericId
-    "numeric",   #31.DiffPrice
-    "character", #32.NumProps_Cat
-    "integer",   #33.Wifi
-    "integer",   #34.Pool
-    "integer",   #35.Shuttle
-    "integer",   #36.Fitness
-    "integer",   #37.Breakfast
-    "integer",   #38.Restaurant
-    "integer"    #39.Parking
+    "numeric", #lengthofstay
+    "factor", #CityCd (only 8)
+    "character", #shopDate
+    "character", #rating
+    "prefType", #character, **i think this should be deleted
+    "numeric",   #Longitude
+    "numeric",   #Latitude
+    "numeric",   #Booked
+    "numeric",   #SpotLight
+    "numeric", #num_prop_display
+    "numeric", #total_prop_display
+    "numeric", #minRate
+    "integer",   #wifi
+    "integer",   #pool
+    "integer",   #shuttle
+    "integer",   #fitness
+    "integer",   #breakfast
+    "integer",   #restaurant
+    "integer"    #parking
   )
 
+
 ### Read in hotel shopping data
+#shelby
 data = fread ("/users/shelb/Documents/Hotel_shop_amenities_full.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
 setnames(data, col.names[col.classes != "NULL"])
 
+#olivia
+data = fread ("Desktop/Hotel CCM/data/Hotel_shop_amenities_full.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
+setnames(data, col.names[col.classes != "NULL"])
 
-# i didnt use this method
-#hotelData <- read.csv("Desktop/Hotel CCM/data/Hotel_shop_amenities.csv",
-#                      +                       header = TRUE, nrows = -1)
+#before we do this lets make sure to remove the columns we dont need 
+#removing these columns: num_prop_display, total_prop_display, pref_type
+data$prefType <- NULL
+data$num_prop_display <- NULL
+data$total_prop_display <- NULL
 
 
 ### Clean data
+#if we do this, we only retain 47% of data... what is solution
+#how many are we losing?
+complete.cases(data)
 data = data[complete.cases(data)]
 
 ### Get seach data
@@ -125,9 +101,6 @@ data[, status:=as.numeric(time==1)] #0:censored, 1:recurrence
 data[, amenities:=Wifi+Pool+Shuttle+Fitness+Breakfast+Restaurant+Parking]
 data[, stars:=ifelse(Rating_Num==".", 0, as.numeric(Rating_Num))]
 
-data[, amenities2:=8-amenities]
-data[, stars2:=6-stars]
-data[, spotlight2:=1-SpotLight]
 
 ### Sort
 setkey(data, SearchDate, NumericId, Prop_Code)
