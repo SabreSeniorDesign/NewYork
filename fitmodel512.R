@@ -133,15 +133,14 @@ data$rating <- as.factor(data$rating)
 summary(data$rating)
 #210 hotels do not have rating info 
 #need to check if any of these were booked
-addNA(data$rating)
-#added it as a level.. didnt work though 
-#levels(facna) <- c(levels(fac), 88)
+data$rating[is.na(data$rating)] <- 'unknown'
+
 
 
 #how many are we losing?
 complete.cases(data)
-#210 lost because the session did not have the hotel rating on it
-#7068/7278=  97% data is retained... good to go
+#72 lost because the session did not have the hotel rating on it
+#7206/7278=  99% data is retained... good to go
 data = data[complete.cases(data)]
 
 ### Get search data
