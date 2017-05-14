@@ -83,12 +83,64 @@ data$total_prop_display <- NULL
 
 
 ### Clean data
+sum(complete.cases(data))
 #if we do this, we only retain 47% of data... what is solution
+
+#1. assign NAs in spotlight to 0, assume if its not 1 it's 0 
+data$spotlight[is.na(data$spotlight)] <- 0 
+summary(data$spotlight)
+#4966/7278 ... now at 68%
+
+#2. assign NA hotel rates to average for that star
+#need to delete outliers (the highest cost, all are in NY)
+
+#this method is definitely not the most efficient
+
+onestar <- data[which(data$rating == "1 CROWN"),]
+summary(onestar)
+#mean room is 80.60
+data$minRate[is.na(data$minRate) & data$rating == "1 CROWN"] <- 80.60
+
+
+twostar <- data[which(data$rating == "2 CROWN"),]
+summary(twostar)
+#mean room is 140.94
+#300 NAs
+data$minRate[is.na(data$minRate) & data$rating == "2 CROWN"] <- 140.94
+
+
+threestar <- data[which(data$rating == "3 CROWN"),]
+summary(threestar)
+#mean room 168.4
+#780 NAs
+data$minRate[is.na(data$minRate) & data$rating == "3 CROWN"] <- 168.4
+
+
+fourstar <- data[which(data$rating == "4 CROWN"),]
+summary(fourstar)
+#mean room 248.45
+#850 NAs
+data$minRate[is.na(data$minRate) & data$rating == "4 CROWN"] <- 248.45
+
+
+fivestar <- data[which(data$rating == "5 CROWN" & data$minRate < 1000),]
+summary(fivestar)
+#mean room 435.5 
+#166 NAs
+data$minRate[is.na(data$minRate) & data$rating == "5 CROWN"] <- 435.5
+
+data$rating <- as.factor(data$rating)
+summary(data$rating)
+#210 hotels do not have rating info 
+#need to check if any of these were booked
+
 #how many are we losing?
 complete.cases(data)
+#72 lost because the session did not have the hotel rating on it
+#7068/7278=  97% data is retained... good to go
 data = data[complete.cases(data)]
 
-### Get seach data
+### Get search data
 data = data[, SearchDate := as.Date(SearchDate, format = "%m/%d/%y")]
 
 ### not necessary 
