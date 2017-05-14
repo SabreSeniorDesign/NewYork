@@ -212,3 +212,58 @@ summary(ccm1)
 #logodds ratio --> look up. log of the odds ratio.
 #predict(mlogit) and give it the model ccm1... use what norbert did
 
+
+
+########################### Creating Clusters 
+
+##### NYC
+dataNYC <- data[which(data$cityCd == "NYC"),]
+#need to calculate average price of a hotel in NYC
+NYCprice <- mean(dataNYC$minRate)
+
+
+#cluster1
+NYC1 <- dataNYC[which (dataNYC$AP >15 & dataNYC$LOS >3 & dataNYC$avgPrice_allProps < NYCprice),]
+
+
+#cluster2
+NYC2 <- dataNYC[which (dataNYC$AP >15 & dataNYC$LOS >3 &  dataNYC$avgPrice_allProps > NYCprice),]
+
+#cluster3
+NYC3 <- dataNYC[which (dataNYC$AP > 10 & dataNYC$LOS < 3 &  dataNYC$avgPrice_allProps < NYCprice),]
+
+
+#cluster4
+NYC4 <- dataNYC[which (dataNYC$AP > 10 & dataNYC$LOS < 3 &  dataNYC$avgPrice_allProps > NYCprice),]
+
+
+#cluster5
+NYC5 <- dataNYC[which (dataNYC$AP > 5 & dataNYC$LOS < 5),]
+
+
+#cluster6
+NYC6 <- dataNYC[which (dataNYC$AP < 5 & dataNYC$LOS < 3),]
+
+
+
+##ATL
+dataATL <- data[which(data$cityCd == "ATL"),]
+
+##BUR
+dataBUR <- data[which(data$cityCd == "BUR"),]
+
+
+
+##LAX
+dataLAX <- data[which(data$cityCd == "LAX"),]
+
+  
+##SNA
+dataSNA <- data[which(data$cityCd == "SNA"),]
+
+
+##CHI
+dataCHI <- data[which(data$cityCd == "CHI"),]
+
+##LGB
+dataLGB <- data[which(data$cityCd == "LGB"),]
