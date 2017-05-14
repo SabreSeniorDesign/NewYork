@@ -143,6 +143,10 @@ complete.cases(data)
 #7206/7278=  99% data is retained... good to go
 data = data[complete.cases(data)]
 
+#trying to ad numID
+#$id <- as.numeric(as.factor(data$sessID))
+data$NumericID <- c(as.factor(data$sessID))
+
 ### Get search data
 data = data[, shopDate := as.Date(shopDate, format = "%m/%d/%y")]
 
@@ -157,7 +161,7 @@ data[, stars:=ifelse(rating==".", 0, as.numeric(rating))]
 
 
 ### Sort
-setkey(data, shopDate, transID, propID)
+setkey(data, shopDate, NumericID, propID)
 
 ### Unique dates
 dates = sort(data[, unique(shopDate)])
@@ -178,16 +182,16 @@ cat("\nFitting model MLOGIT1... \n")
 t.ptm <- proc.time()
 #proc.time determines cpu time to run a model 
 
-setkey(data_train, transID, propID)
-f1 = mFormula(Booked ~ -1 + spotlight + 
+setkey(data_train, NumericID, propID)
+f1 = mFormula(booked ~ -1 + spotlight + 
                 wifi + pool + shuttle + fitness + breakfast + restaurant + parking +
                 rating*fitness + 
                 rating*breakfast + rating*restaurant)
 
 ccm1 = mlogit(f1,
-              data = data_train[, list(transID, propID, booked, spotlight, 
+              data = data_train[list (NumericID, propID, booked, spotlight, 
                                        wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
-              shape = "long", alt.var = "propID", chid.var = "transID")
+              shape = "long", alt.var = "propID", chid.var = "NumericID")
 
 summary(ccm1)
 
