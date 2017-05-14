@@ -72,8 +72,8 @@ data = fread ("/users/shelb/Documents/Hotel_shop_amenities_full.csv", header = T
 setnames(data, col.names[col.classes != "NULL"])
 
 #olivia
-data = fread ("Desktop/Hotel CCM/data/Hotel_shop_amenities_full.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
-setnames(data, col.names[col.classes != "NULL"])
+#data = fread ("Desktop/Hotel CCM/data/Hotel_shop_amenities_full.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
+#setnames(data, col.names[col.classes != "NULL"])
 
 #before we do this lets make sure to remove the columns we dont need 
 #removing these columns: num_prop_display, total_prop_display, pref_type
@@ -141,29 +141,29 @@ complete.cases(data)
 data = data[complete.cases(data)]
 
 ### Get search data
-data = data[, SearchDate := as.Date(SearchDate, format = "%m/%d/%y")]
+data = data[, shopDate := as.Date(shopDate, format = "%m/%d/%y")]
 
 ### not necessary 
 #Add time and status (censoring) variable 
 ### so we can fit Cox proportional hazards model as CCM
-data[, time:=ifelse(Booked==1,1,2)]
+data[, time:=ifelse(booked==1,1,2)]
 data[, status:=as.numeric(time==1)] #0:censored, 1:recurrence
 
 ### Number of amenities
-data[, amenities:=Wifi+Pool+Shuttle+Fitness+Breakfast+Restaurant+Parking]
-data[, stars:=ifelse(Rating_Num==".", 0, as.numeric(Rating_Num))]
+data[, amenities:=wifi+pool+shuttle+fitness+breakfast+restaurant+parking]
+data[, stars:=ifelse(rating==".", 0, as.numeric(rating))]
 
 
 ### Sort
-setkey(data, SearchDate, NumericId, Prop_Code)
+setkey(data, shopDate, transID, propID)
 
 ### Unique dates
-dates = sort(data[, unique(SearchDate)])
+dates = sort(data[, unique(shopDate)])
 
 ### Select test and validation data
 insample_rate = 0.7
-data_train = data[SearchDate <= dates[round(insample_rate*length(dates))]]
-data_valid = data[SearchDate > dates[round(insample_rate*length(dates))]]
+data_train = data[shopDate <= dates[round(insample_rate*length(dates))]]
+data_valid = data[shopDate > dates[round(insample_rate*length(dates))]]
 #rm(data)
 gc()
 
