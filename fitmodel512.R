@@ -68,12 +68,12 @@ col.classes =
 
 ### Read in hotel shopping data
 #shelby
-data = fread ("/users/shelb/Documents/Hotel_shop_amenities_full.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
+data = fread ("/users/shelb/Documents/GitHub/Hotel_shop_amenities_full.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
 setnames(data, col.names[col.classes != "NULL"])
 
 #olivia
-data = fread ("Desktop/Hotel CCM/data/Hotel_shop_amenities_full1.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
-setnames(data, col.names[col.classes != "NULL"])
+#data = fread ("Desktop/Hotel CCM/data/Hotel_shop_amenities_full1.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
+#setnames(data, col.names[col.classes != "NULL"])
 
 #before we do this lets make sure to remove the columns we dont need 
 #removing these columns: num_prop_display, total_prop_display, pref_type
@@ -187,9 +187,9 @@ names (avgPrice_perSession) <- c ("NumericID", "avgPrice_allProps")
 data <- merge (data, avgPrice_perSession,
                    by = "NumericID")
 
-data_whole <- unique(data)
-data_whole <- data_whole[2:22)]
-data_run <- data[,1:22 ]
+#data_whole <- unique(data)
+#data_whole <- data_whole[2:22)]
+#data_run <- data[,1:22 ]
 
 ####################################### I. FIT MLOGIT I  ###################################################
 
@@ -248,22 +248,169 @@ NYC6 <- dataNYC[which (dataNYC$AP < 5 & dataNYC$LOS < 3),]
 
 ##ATL
 dataATL <- data[which(data$cityCd == "ATL"),]
+#need to calculate average price of a hotel in ATL
+ATLprice <- mean(dataATL$minRate)
+
+
+#cluster1
+ATL1 <- dataATL[which (dataATL$AP >15 & dataATL$LOS >3 & dataATL$avgPrice_allProps < ATLprice),]
+
+
+#cluster2
+ATL2 <- dataATL[which (dataATL$AP >15 & dataATL$LOS >3 &  dataATL$avgPrice_allProps > ATLprice),]
+
+#cluster3
+ATL3 <- dataATL[which (dataATL$AP > 10 & dataATL$LOS < 3 &  dataATL$avgPrice_allProps < ATLprice),]
+
+
+#cluster4
+ATL4 <- dataATL[which (dataATL$AP > 10 & dataATL$LOS < 3 &  dataATL$avgPrice_allProps > ATLprice),]
+
+
+#cluster5
+ATL5 <- dataATL[which (dataATL$AP > 5 & dataATL$LOS < 5),]
+
+
+#cluster6
+ATL6 <- dataATL[which (dataATL$AP < 5 & dataATL$LOS < 3),]
 
 ##BUR
 dataBUR <- data[which(data$cityCd == "BUR"),]
+#need to calculate average price of a hotel in BUR
+BURprice <- mean(dataBUR$minRate)
 
+
+#cluster1
+BUR1 <- dataBUR[which (dataBUR$AP >15 & dataBUR$LOS >3 & dataBUR$avgPrice_allProps < BURprice),]
+
+
+#cluster2
+BUR2 <- dataBUR[which (dataBUR$AP >15 & dataBUR$LOS >3 &  dataBUR$avgPrice_allProps > BURprice),]
+
+#cluster3
+BUR3 <- dataBUR[which (dataBUR$AP > 10 & dataBUR$LOS < 3 &  dataBUR$avgPrice_allProps < BURprice),]
+
+
+#cluster4
+BUR4 <- dataBUR[which (dataBUR$AP > 10 & dataBUR$LOS < 3 &  dataBUR$avgPrice_allProps > BURprice),]
+
+
+#cluster5
+BUR5 <- dataBUR[which (dataBUR$AP > 5 & dataBUR$LOS < 5),]
+
+
+#cluster6
+BUR6 <- dataBUR[which (dataBUR$AP < 5 & dataBUR$LOS < 3),]
 
 
 ##LAX
 dataLAX <- data[which(data$cityCd == "LAX"),]
+#need to calculate average price of a hotel in LAX
+LAXprice <- mean(dataLAX$minRate)
 
+
+#cluster1
+LAX1 <- dataLAX[which (dataLAX$AP >15 & dataLAX$LOS >3 & dataLAX$avgPrice_allProps < LAXprice),]
+
+
+#cluster2
+LAX2 <- dataLAX[which (dataLAX$AP >15 & dataLAX$LOS >3 &  dataLAX$avgPrice_allProps > LAXprice),]
+
+#cluster3
+LAX3 <- dataLAX[which (dataLAX$AP > 10 & dataLAX$LOS < 3 &  dataLAX$avgPrice_allProps < LAXprice),]
+
+
+#cluster4
+LAX4 <- dataLAX[which (dataLAX$AP > 10 & dataLAX$LOS < 3 &  dataLAX$avgPrice_allProps > LAXprice),]
+
+
+#cluster5
+LAX5 <- dataLAX[which (dataLAX$AP > 5 & dataLAX$LOS < 5),]
+
+
+#cluster6
+LAX6 <- dataLAX[which (dataLAX$AP < 5 & dataLAX$LOS < 3),]
   
 ##SNA
 dataSNA <- data[which(data$cityCd == "SNA"),]
+#need to calculate average price of a hotel in SNA
+SNAprice <- mean(dataSNA$minRate)
 
+
+#cluster1
+SNA1 <- dataSNA[which (dataSNA$AP >15 & dataSNA$LOS >3 & dataSNA$avgPrice_allProps < SNAprice),]
+
+
+#cluster2
+SNA2 <- dataSNA[which (dataSNA$AP >15 & dataSNA$LOS >3 &  dataSNA$avgPrice_allProps > SNAprice),]
+
+#cluster3
+SNA3 <- dataSNA[which (dataSNA$AP > 10 & dataSNA$LOS < 3 &  dataSNA$avgPrice_allProps < SNAprice),]
+
+
+#cluster4
+SNA4 <- dataSNA[which (dataSNA$AP > 10 & dataSNA$LOS < 3 &  dataSNA$avgPrice_allProps > SNAprice),]
+
+
+#cluster5
+SNA5 <- dataSNA[which (dataSNA$AP > 5 & dataSNA$LOS < 5),]
+
+
+#cluster6
+SNA6 <- dataSNA[which (dataSNA$AP < 5 & dataSNA$LOS < 3),]
 
 ##CHI
 dataCHI <- data[which(data$cityCd == "CHI"),]
+#need to calculate average price of a hotel in CHI
+CHIprice <- mean(dataCHI$minRate)
+
+
+#cluster1
+CHI1 <- dataCHI[which (dataCHI$AP >15 & dataCHI$LOS >3 & dataCHI$avgPrice_allProps < CHIprice),]
+
+
+#cluster2
+CHI2 <- dataCHI[which (dataCHI$AP >15 & dataCHI$LOS >3 &  dataCHI$avgPrice_allProps > CHIprice),]
+
+#cluster3
+CHI3 <- dataCHI[which (dataCHI$AP > 10 & dataCHI$LOS < 3 &  dataCHI$avgPrice_allProps < CHIprice),]
+
+
+#cluster4
+CHI4 <- dataCHI[which (dataCHI$AP > 10 & dataCHI$LOS < 3 &  dataCHI$avgPrice_allProps > CHIprice),]
+
+
+#cluster5
+CHI5 <- dataCHI[which (dataCHI$AP > 5 & dataCHI$LOS < 5),]
+
+
+#cluster6
+CHI6 <- dataCHI[which (dataCHI$AP < 5 & dataCHI$LOS < 3),]
 
 ##LGB
 dataLGB <- data[which(data$cityCd == "LGB"),]
+#need to calculate average price of a hotel in LGB
+LGBprice <- mean(dataLGB$minRate)
+
+
+#cluster1
+LGB1 <- dataLGB[which (dataLGB$AP >15 & dataLGB$LOS >3 & dataLGB$avgPrice_allProps < LGBprice),]
+
+
+#cluster2
+LGB2 <- dataLGB[which (dataLGB$AP >15 & dataLGB$LOS >3 &  dataLGB$avgPrice_allProps > LGBprice),]
+
+#cluster3
+LGB3 <- dataLGB[which (dataLGB$AP > 10 & dataLGB$LOS < 3 &  dataLGB$avgPrice_allProps < LGBprice),]
+
+
+#cluster4
+LGB4 <- dataLGB[which (dataLGB$AP > 10 & dataLGB$LOS < 3 &  dataLGB$avgPrice_allProps > LGBprice),]
+
+
+#cluster5
+LGB5 <- dataLGB[which (dataLGB$AP > 5 & dataLGB$LOS < 5),]
+
+
+#cluster6
+LGB6 <- dataLGB[which (dataLGB$AP < 5 & dataLGB$LOS < 3),]
