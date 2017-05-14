@@ -176,17 +176,15 @@ cat("\nFitting model MLOGIT1... \n")
 t.ptm <- proc.time()
 #proc.time determines cpu time to run a model 
 
-setkey(data_train, NumericId, Prop_Code)
-f1 = mFormula(Booked ~ -1 + Ratio2 + SpotLight + Line_Num + 
-                Wifi + Pool + Shuttle + Fitness + Breakfast + Restaurant + Parking +
-                Rating*Fitness + 
-                Rating*Breakfast + Rating*Restaurant + 
-                NumSpot_Interaction)
+setkey(data_train, transID, propID)
+f1 = mFormula(Booked ~ -1 + spotlight + 
+                wifi + pool + shuttle + fitness + breakfast + restaurant + parking +
+                rating*fitness + 
+                rating*breakfast + rating*restaurant)
 ccm1 = mlogit(f1,
-              data = data_train[, list(NumericId, Prop_Code, Booked, Ratio2, SpotLight, Line_Num, 
-                                       Wifi, Pool, Shuttle, Fitness, Breakfast, Restaurant, Parking, 
-                                       NumSpot_Interaction, Rating)], 
-              shape = "long", alt.var = "Prop_Code", chid.var = "NumericId")
+              data = data_train[, list(transID, propID, booked, spotlight, 
+                                       wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+              shape = "long", alt.var = "propID", chid.var = "transID")
 
 summary(ccm1)
 
