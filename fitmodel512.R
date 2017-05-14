@@ -147,7 +147,6 @@ data = data[complete.cases(data)]
 data = data[, shopDate := as.Date(shopDate, format = "%m/%d/%y")]
 
 ### not necessary 
-#Add time and status (censoring) variable 
 ### so we can fit Cox proportional hazards model as CCM
 data[, time:=ifelse(booked==1,1,2)]
 data[, status:=as.numeric(time==1)] #0:censored, 1:recurrence
