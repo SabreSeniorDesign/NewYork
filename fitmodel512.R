@@ -187,29 +187,28 @@ names (avgPrice_perSession) <- c ("NumericID", "avgPrice_allProps")
 data <- merge (data, avgPrice_perSession,
                    by = "NumericID")
 
-
+data_whole <- unique(data)
+data_whole <- data_whole[2:22)]
+data_run <- data[,1:22 ]
 
 ####################################### I. FIT MLOGIT I  ###################################################
-cat("\nFitting model MLOGIT1... \n")
-t.ptm <- proc.time()
-#proc.time determines cpu time to run a model 
 
-setkey(data_train, NumericID, propID)
+setkey(data, NumericID, propID)
 f1 = mFormula(booked ~ -1 + spotlight + 
                 wifi + pool + shuttle + fitness + breakfast + restaurant + parking +
-                rating*fitness + 
-                rating*breakfast + rating*restaurant)
+                rating*fitness + rating*breakfast + rating*restaurant)
 
 ccm1 = mlogit(f1,
-              data = data_train[list (NumericID, propID, booked, spotlight, 
+              data = data[,list(NumericID, propID, booked, spotlight, 
                                        wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
               shape = "long", alt.var = "propID", chid.var = "NumericID")
+
+ccm2 = mlogit(f1, data=data_whole[,list(AP, LOS, minRate)], shape = "long", alt.var = "propID", chid.var = "NumericID")
 
 summary(ccm1)
 
 
 
-#dont use both diffprice and ratio2
 #logodds ratio --> look up. log of the odds ratio.
 #predict(mlogit) and give it the model ccm1... use what norbert did
 
