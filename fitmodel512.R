@@ -175,8 +175,9 @@ setkey(data, shopDate, NumericID, propID)
 #dates = sort(data[, unique(shopDate)])
 
 #average price of each session
-avgPrice_perSession <- aggregate (minRate ~ transID,
-                                  data = cluster2,
+#use NumericID
+avgPrice_perSession <- aggregate (minRate ~ NumericID,
+                                  data = data,
                                   mean)
 
 # Now have average price of ALL properties looked at in a session
@@ -184,7 +185,7 @@ names (avgPrice_perSession) <- c ("NumericID", "avgPrice_allProps")
 
 #merge with data set
 data <- merge (data, avgPrice_perSession,
-                   by = "transID")
+                   by = "NumericID")
 
 
 
