@@ -175,10 +175,6 @@ gc()
 
 
 ####################################### I. FIT MLOGIT I  ###################################################
-cat("\nFitting model MLOGIT1... \n")
-t.ptm <- proc.time()
-#proc.time determines cpu time to run a model 
-
 setkey(data_train, NumericId, Prop_Code)
 f1 = mFormula(Booked ~ -1 + Ratio2 + SpotLight + Line_Num + 
                 Wifi + Pool + Shuttle + Fitness + Breakfast + Restaurant + Parking +
