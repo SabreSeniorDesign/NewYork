@@ -133,11 +133,14 @@ data$rating <- as.factor(data$rating)
 summary(data$rating)
 #210 hotels do not have rating info 
 #need to check if any of these were booked
+data$rating[is.na(data$rating)] <- 'unknown'
+
+
 
 #how many are we losing?
 complete.cases(data)
 #72 lost because the session did not have the hotel rating on it
-#7068/7278=  97% data is retained... good to go
+#7206/7278=  99% data is retained... good to go
 data = data[complete.cases(data)]
 
 ### Get search data
@@ -172,6 +175,7 @@ gc()
 
 
 ####################################### I. FIT MLOGIT I  ###################################################
+<<<<<<< HEAD
 cat("\nFitting model MLOGIT1... \n")
 t.ptm <- proc.time()
 #proc.time determines cpu time to run a model 
@@ -181,6 +185,14 @@ f1 = mFormula(Booked ~ -1 + spotlight +
                 wifi + pool + shuttle + fitness + breakfast + restaurant + parking +
                 rating*fitness + 
                 rating*breakfast + rating*restaurant)
+=======
+setkey(data_train, NumericId, Prop_Code)
+f1 = mFormula(Booked ~ -1 + Ratio2 + SpotLight + Line_Num + 
+                Wifi + Pool + Shuttle + Fitness + Breakfast + Restaurant + Parking +
+                Rating*Fitness + 
+                Rating*Breakfast + Rating*Restaurant + 
+                NumSpot_Interaction)
+>>>>>>> origin/master
 ccm1 = mlogit(f1,
               data = data_train[, list(transID, propID, booked, spotlight, 
                                        wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
