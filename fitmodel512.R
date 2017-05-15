@@ -251,28 +251,74 @@ dataNYCc1 = mlogit(f1,
                   data = NYC1[,list(NumericID, propID, booked, spotlight, 
                                        wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
                   shape = "long", alt.var = "propID", chid.var = "NumericID")
+#saved as dataNYCc1
+
 
 #cluster2
 NYC2 <- dataNYC[which (dataNYC$AP < 10 & dataNYC$avgPrice_allProps > NYCprice),]
 
+setkey(NYC2, NumericID, propID)
+
+dataNYCc2 = mlogit(f1,
+                   data = NYC2[,list(NumericID, propID, booked, spotlight, 
+                                     wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                   shape = "long", alt.var = "propID", chid.var = "NumericID")
+#saved as dataNYCc2
+
 #cluster3
 NYC3 <- dataNYC[which (dataNYC$AP >= 10),]
 
+setkey(NYC3, NumericID, propID)
+
+dataNYCc3 = mlogit(f1,
+                   data = NYC3[,list(NumericID, propID, booked, spotlight, 
+                                     wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                   shape = "long", alt.var = "propID", chid.var = "NumericID")
+#saved as dataNYCc3
 
 ##ATL
 dataATL <- data[which(data$cityCd == "ATL"),]
 dataATL$cityCd <- NULL
 #need to calculate average price of a hotel in ATL
 ATLprice <- mean(dataATL$minRate)
+setkey(dataATL, NumericID, propID)
+
+dataATL1 = mlogit(f1,
+                   data = dataATL[,list(NumericID, propID, booked, spotlight, 
+                                     wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                   shape = "long", alt.var = "propID", chid.var = "NumericID")
 
 #cluster1
 ATL1 <- dataATL[which (dataATL$AP < 10 & dataATL$avgPrice_allProps < ATLprice),]
 
+setkey(ATL1, NumericID, propID)
+
+dataATLc1 = mlogit(f1,
+                  data = ATL1[,list(NumericID, propID, booked, spotlight, 
+                                       wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                  shape = "long", alt.var = "propID", chid.var = "NumericID")
+
+
 #cluster2
 ATL2 <- dataATL[which (dataATL$AP < 10 & dataATL$avgPrice_allProps > ATLprice),]
+setkey(ATL2, NumericID, propID)
+
+dataATLc2 = mlogit(f1,
+                   data = ATL2[,list(NumericID, propID, booked, spotlight, 
+                                     wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                   shape = "long", alt.var = "propID", chid.var = "NumericID")
+
 
 #cluster3
 ATL3 <- dataATL[which (dataATL$AP >= 10),]
+
+setkey(ATL3, NumericID, propID)
+
+dataATLc3 = mlogit(f1,
+                   data = ATL3[,list(NumericID, propID, booked, spotlight, 
+                                     wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                   shape = "long", alt.var = "propID", chid.var = "NumericID")
+
 
 
 ##LAX AREA
