@@ -198,23 +198,14 @@ table(data$booked, data$NumericID)
 
 setkey(data, NumericID, propID)
 f1 = mFormula(booked ~ -1 + spotlight + 
-                wifi + pool + shuttle + fitness + breakfast + restaurant + parking +
-                rating*fitness + rating*breakfast + rating*restaurant)
+                wifi + pool + shuttle + fitness + breakfast + restaurant + parking)
 
-ccm3 = mlogit(f1,
-              data = NYC1[,list(NumericID, propID, booked, spotlight, 
+data1 = mlogit(f1,
+              data = data[,list(NumericID, propID, booked, spotlight, 
               wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
               shape = "long", alt.var = "propID", chid.var = "NumericID")
-
-ccm2 = mlogit(f1, data=data_whole[,list(AP, LOS, minRate)], shape = "long", alt.var = "propID", chid.var = "NumericID")
-
+#whole dataset - data1
 summary(ccm1)
-
-
-
-#logodds ratio --> look up. log of the odds ratio.
-#predict(mlogit) and give it the model ccm1... 
-
 
 
 ########################### Creating Clusters 
@@ -246,15 +237,20 @@ NYCprice <- mean(dataNYC$minRate)
 
 #####this is the mlogit that works######
 setkey(dataNYC, NumericID, propID)
-f1 = mFormula(booked ~ -1 + spotlight + wifi + pool + shuttle + breakfast + restaurant + parking)
-ccm3 = mlogit(f1,
+dataNYC1 = mlogit(f1,
               data = dataNYC[,list(NumericID, propID, booked, spotlight, 
                                 wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
               shape = "long", alt.var = "propID", chid.var = "NumericID")
-
+#saved at dataNYC1
 
 #cluster1
 NYC1 <- dataNYC[which (dataNYC$AP < 10 & dataNYC$avgPrice_allProps < NYCprice),]
+setkey(NYC1, NumericID, propID)
+
+dataNYCc1 = mlogit(f1,
+                  data = NYC1[,list(NumericID, propID, booked, spotlight, 
+                                       wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                  shape = "long", alt.var = "propID", chid.var = "NumericID")
 
 #cluster2
 NYC2 <- dataNYC[which (dataNYC$AP < 10 & dataNYC$avgPrice_allProps > NYCprice),]
