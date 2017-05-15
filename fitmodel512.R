@@ -244,7 +244,7 @@ NYCprice <- mean(dataNYC$minRate)
 #reconsider segmentation, wider bands - 3 or 4 
 #difference between segments and cities
 
-
+#####this is the mlogit that works######
 setkey(dataNYC, NumericID, propID)
 f1 = mFormula(booked ~ -1 + spotlight + wifi + pool + shuttle + breakfast + restaurant + parking)
 ccm3 = mlogit(f1,
@@ -263,34 +263,20 @@ NYC2 <- dataNYC[which (dataNYC$AP < 10 & dataNYC$avgPrice_allProps > NYCprice),]
 NYC3 <- dataNYC[which (dataNYC$AP >= 10),]
 
 
-
 ##ATL
 dataATL <- data[which(data$cityCd == "ATL"),]
 #need to calculate average price of a hotel in ATL
 ATLprice <- mean(dataATL$minRate)
 
-
 #cluster1
-ATL1 <- dataATL[which (dataATL$AP >15 & dataATL$LOS >3 & dataATL$avgPrice_allProps < ATLprice),]
-
+ATL1 <- dataATL[which (dataATL$AP < 10 & dataATL$avgPrice_allProps < ATLprice),]
 
 #cluster2
-ATL2 <- dataATL[which (dataATL$AP >15 & dataATL$LOS >3 &  dataATL$avgPrice_allProps > ATLprice),]
+ATL2 <- dataATL[which (dataATL$AP < 10 & dataATL$avgPrice_allProps > ATLprice),]
 
 #cluster3
-ATL3 <- dataATL[which (dataATL$AP > 10 & dataATL$LOS < 3 &  dataATL$avgPrice_allProps < ATLprice),]
+ATL3 <- dataATL[which (dataATL$AP >= 10),]
 
-
-#cluster4
-ATL4 <- dataATL[which (dataATL$AP > 10 & dataATL$LOS < 3 &  dataATL$avgPrice_allProps > ATLprice),]
-
-
-#cluster5
-ATL5 <- dataATL[which (dataATL$AP > 5 & dataATL$LOS < 5),]
-
-
-#cluster6
-ATL6 <- dataATL[which (dataATL$AP < 5 & dataATL$LOS < 3),]
 
 ##LAX AREA
 dataLAX <- data[which(data$cityCd == "BUR" | data$cityCd == "LGB" | data$cityCd == "SNA" | data$cityCd == "LAX"),]
@@ -298,27 +284,13 @@ dataLAX <- data[which(data$cityCd == "BUR" | data$cityCd == "LGB" | data$cityCd 
 LAXprice <- mean(dataLAX$minRate)
 
 #cluster1
-LAX1 <- dataLAX[which (dataLAX$AP >15 & dataLAX$LOS >3 & dataLAX$avgPrice_allProps < LAXprice),]
-
+LAX1 <- dataLAX[which (dataLAX$AP < 10 & dataLAX$avgPrice_allProps < LAXprice),]
 
 #cluster2
-LAX2 <- dataLAX[which (dataLAX$AP >15 & dataLAX$LOS >3 &  dataLAX$avgPrice_allProps > LAXprice),]
+LAX2 <- dataLAX[which (dataLAX$AP < 10 & dataLAX$avgPrice_allProps > LAXprice),]
 
 #cluster3
-LAX3 <- dataLAX[which (dataLAX$AP > 10 & dataLAX$LOS < 3 &  dataLAX$avgPrice_allProps < LAXprice),]
-
-
-#cluster4
-LAX4 <- dataLAX[which (dataLAX$AP > 10 & dataLAX$LOS < 3 &  dataLAX$avgPrice_allProps > LAXprice),]
-
-
-#cluster5
-LAX5 <- dataLAX[which (dataLAX$AP > 5 & dataLAX$LOS < 5),]
-
-
-#cluster6
-LAX6 <- dataLAX[which (dataLAX$AP < 5 & dataLAX$LOS < 3),]
-
+LAX3 <- dataLAX[which (dataLAX$AP >= 10),]
 
 
 ##CHI
@@ -326,25 +298,35 @@ dataCHI <- data[which(data$cityCd == "CHI"),]
 #need to calculate average price of a hotel in CHI
 CHIprice <- mean(dataCHI$minRate)
 
-
 #cluster1
-CHI1 <- dataCHI[which (dataCHI$AP >15 & dataCHI$LOS >3 & dataCHI$avgPrice_allProps < CHIprice),]
+CHI1 <- dataCHI[which (dataCHI$AP < 10 & dataCHI$avgPrice_allProps < CHIprice),]
+
+#cluster2
+CHI2 <- dataCHI[which (dataCHI$AP < 10 & dataCHI$avgPrice_allProps > CHIprice),]
+
+#cluster3
+CHI3 <- dataCHI[which (dataCHI$AP >= 10),]
+
+
+#########old clusters!!!!!!!!!!!!!!!########
+#cluster1
+#CHI1 <- dataCHI[which (dataCHI$AP >15 & dataCHI$LOS >3 & dataCHI$avgPrice_allProps < CHIprice),]
 
 
 #cluster2
-CHI2 <- dataCHI[which (dataCHI$AP >15 & dataCHI$LOS >3 &  dataCHI$avgPrice_allProps > CHIprice),]
+#CHI2 <- dataCHI[which (dataCHI$AP >15 & dataCHI$LOS >3 &  dataCHI$avgPrice_allProps > CHIprice),]
 
 #cluster3
-CHI3 <- dataCHI[which (dataCHI$AP > 10 & dataCHI$LOS < 3 &  dataCHI$avgPrice_allProps < CHIprice),]
+#CHI3 <- dataCHI[which (dataCHI$AP > 10 & dataCHI$LOS < 3 &  dataCHI$avgPrice_allProps < CHIprice),]
 
 
 #cluster4
-CHI4 <- dataCHI[which (dataCHI$AP > 10 & dataCHI$LOS < 3 &  dataCHI$avgPrice_allProps > CHIprice),]
+#CHI4 <- dataCHI[which (dataCHI$AP > 10 & dataCHI$LOS < 3 &  dataCHI$avgPrice_allProps > CHIprice),]
 
 
 #cluster5
-CHI5 <- dataCHI[which (dataCHI$AP > 5 & dataCHI$LOS < 5),]
+#CHI5 <- dataCHI[which (dataCHI$AP > 5 & dataCHI$LOS < 5),]
 
 
 #cluster6
-CHI6 <- dataCHI[which (dataCHI$AP < 5 & dataCHI$LOS < 3),]
+#CHI6 <- dataCHI[which (dataCHI$AP < 5 & dataCHI$LOS < 3),]
