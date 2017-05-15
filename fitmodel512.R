@@ -72,8 +72,8 @@ data = fread ("/users/shelb/Documents/GitHub/Hotel_shop_amenities_full.csv", hea
 setnames(data, col.names[col.classes != "NULL"])
 
 #olivia
-data = fread ("Desktop/Hotel CCM/data/Hotel_shop_amenities_full1.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
-setnames(data, col.names[col.classes != "NULL"])
+#data = fread ("Desktop/Hotel CCM/data/Hotel_shop_amenities_full1.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
+#setnames(data, col.names[col.classes != "NULL"])
 
 #before we do this lets make sure to remove the columns we dont need 
 #removing these columns: num_prop_display, total_prop_display, pref_type
@@ -186,8 +186,13 @@ names (avgPrice_perSession) <- c ("NumericID", "avgPrice_allProps")
 data <- merge (data, avgPrice_perSession,
                    by = "NumericID")
 
-#data_whole <- unique(data)
-
+duplicated(data)
+data <- unique(data, by= c("NumericID", "propID"))
+data[ , N:= length(propID), by="NumericID"]
+data = data[N > 1]
+data[,sumbooked:= sum(booked), by="NumericID" ]
+data = data[sumbooked ==1]
+table(data$booked, data$NumericID)
 
 ####################################### I. FIT MLOGIT I  ###################################################
 
@@ -220,15 +225,14 @@ dataNYC$cityCd <- NULL
 #need to calculate average price of a hotel in NYC
 NYCprice <- mean(dataNYC$minRate)
 
-setkey(dataNYC, NumericID, propID)
-duplicated(dataNYC)
-dataNYC <- unique(dataNYC, by= c("NumericID", "propID"))
-dataNYC[ , N:= length(propID), by="NumericID"]
-dataNYC = dataNYC[N > 1]
-dataNYC[,sumbooked:= sum(booked), by="NumericID" ]
-dataNYC = dataNYC[sumbooked ==1]
+#what norbert and ross helped us write
+#duplicated(dataNYC)
+#dataNYC <- unique(dataNYC, by= c("NumericID", "propID"))
+#dataNYC[ , N:= length(propID), by="NumericID"]
+#dataNYC = dataNYC[N > 1]
+#dataNYC[,sumbooked:= sum(booked), by="NumericID" ]
+#dataNYC = dataNYC[sumbooked ==1]
 
-f1 = mFormula(booked ~ -1 + spotlight + wifi + pool + shuttle + breakfast + restaurant + parking)
 #not enough data, singularity
 #fix pool =2
 #table(dataNYC$pool, dataNYC$wifi)
@@ -241,7 +245,8 @@ f1 = mFormula(booked ~ -1 + spotlight + wifi + pool + shuttle + breakfast + rest
 #difference between segments and cities
 
 
-
+setkey(dataNYC, NumericID, propID)
+f1 = mFormula(booked ~ -1 + spotlight + wifi + pool + shuttle + breakfast + restaurant + parking)
 ccm3 = mlogit(f1,
               data = dataNYC[,list(NumericID, propID, booked, spotlight, 
                                 wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
