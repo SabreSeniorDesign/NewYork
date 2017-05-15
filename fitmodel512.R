@@ -327,6 +327,14 @@ dataLAX$cityCd <- NULL
 #need to calculate average price of a hotel in BUR
 LAXprice <- mean(dataLAX$minRate)
 
+setkey(dataLAX, NumericID, propID)
+
+dataLAX1 = mlogit(f1,
+                  data = dataLAX[,list(NumericID, propID, booked, spotlight, 
+                                       wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                  shape = "long", alt.var = "propID", chid.var = "NumericID")
+
+
 #cluster1
 LAX1 <- dataLAX[which (dataLAX$AP < 10 & dataLAX$avgPrice_allProps < LAXprice),]
 
@@ -361,6 +369,14 @@ dataCHI$cityCd <- NULL
 #need to calculate average price of a hotel in CHI
 CHIprice <- mean(dataCHI$minRate)
 
+setkey(dataCHI, NumericID, propID)
+
+dataCHI1 = mlogit(f1,
+                  data = dataCHI[,list(NumericID, propID, booked, spotlight, 
+                                       wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                  shape = "long", alt.var = "propID", chid.var = "NumericID")
+
+
 #cluster1
 CHI1 <- dataCHI[which (dataCHI$AP < 10 & dataCHI$avgPrice_allProps < CHIprice),]
 setkey(CHI1, NumericID, propID)
@@ -386,6 +402,24 @@ dataCHIc3 = mlogit(f1,
                    data = CHI3[,list(NumericID, propID, booked, spotlight, 
                                      wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
                    shape = "long", alt.var = "propID", chid.var = "NumericID")
+
+
+summary(dataATL1)
+summary(dataATLc1)
+summary(dataATLc2)
+summary(dataATLc3)
+summary(dataCHI1)
+summary(dataCHIc1)
+summary(dataCHIc2)
+summary(dataCHIc3)
+summary(dataLAX1)
+summary(dataLAXc1)
+summary(dataLAXc2)
+summary(dataLAXc3)
+summary(dataNYC1)
+summary(dataNYCc1)
+summary(dataNYCc2)
+summary(dataNYCc3)
 
 #########old clusters!!!!!!!!!!!!!!!########
 #cluster1
