@@ -72,8 +72,8 @@ data = fread ("/users/shelb/Documents/GitHub/Hotel_shop_amenities_full.csv", hea
 setnames(data, col.names[col.classes != "NULL"])
 
 #olivia
-#data = fread ("Desktop/Hotel CCM/data/Hotel_shop_amenities_full1.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
-#setnames(data, col.names[col.classes != "NULL"])
+data = fread ("Desktop/Hotel CCM/data/Hotel_shop_amenities_full1.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
+setnames(data, col.names[col.classes != "NULL"])
 
 #before we do this lets make sure to remove the columns we dont need 
 #removing these columns: num_prop_display, total_prop_display, pref_type
@@ -138,9 +138,9 @@ addNA(data$rating)
 data$rating[is.na(data$rating)] <- "unknown"
 
 #olivia only 
-#install.packages("forcats")
-#library(forcats)
-#data$rating <- fct_explicit_na(data$rating)
+install.packages("forcats")
+library(forcats)
+data$rating <- fct_explicit_na(data$rating)
 
 
 #how many are we losing?
@@ -151,7 +151,6 @@ sum(complete.cases(data))
 data = data[complete.cases(data)]
 
 #trying to ad numID
-#$id <- as.numeric(as.factor(data$sessID))
 data$NumericID <- c(as.factor(data$sessID))
 
 ### Get search data
@@ -188,8 +187,7 @@ data <- merge (data, avgPrice_perSession,
                    by = "NumericID")
 
 #data_whole <- unique(data)
-#data_whole <- data_whole[2:22)]
-#data_run <- data[,1:22 ]
+
 
 ####################################### I. FIT MLOGIT I  ###################################################
 
@@ -198,9 +196,9 @@ f1 = mFormula(booked ~ -1 + spotlight +
                 wifi + pool + shuttle + fitness + breakfast + restaurant + parking +
                 rating*fitness + rating*breakfast + rating*restaurant)
 
-ccm1 = mlogit(f1,
-              data = data[,list(NumericID, propID, booked, spotlight, 
-                                       wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+ccm3 = mlogit(f1,
+              data = NYC1[,list(NumericID, propID, booked, spotlight, 
+              wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
               shape = "long", alt.var = "propID", chid.var = "NumericID")
 
 ccm2 = mlogit(f1, data=data_whole[,list(AP, LOS, minRate)], shape = "long", alt.var = "propID", chid.var = "NumericID")
@@ -210,7 +208,7 @@ summary(ccm1)
 
 
 #logodds ratio --> look up. log of the odds ratio.
-#predict(mlogit) and give it the model ccm1... use what norbert did
+#predict(mlogit) and give it the model ccm1... 
 
 
 
@@ -218,12 +216,56 @@ summary(ccm1)
 
 ##### NYC
 dataNYC <- data[which(data$cityCd == "NYC"),]
+dataNYC$cityCd <- NULL
 #need to calculate average price of a hotel in NYC
 NYCprice <- mean(dataNYC$minRate)
 
+setkey(dataNYC, NumericID, propID)
+duplicated(dataNYC)
+dataNYC <- unique(dataNYC, by= c("NumericID", "propID"))
+dataNYC[ , N:= length(propID), by="NumericID"]
+dataNYC = dataNYC[N > 1]
+dataNYC[,sumbooked:= sum(booked), by="NumericID" ]
+dataNYC = dataNYC[sumbooked ==1]
+
+f1 = mFormula(booked ~ -1 + spotlight + wifi + pool + shuttle + breakfast + restaurant + parking)
+#not enough data, singularity
+#fix pool =2
+#table(dataNYC$pool, dataNYC$wifi)
+#table(dataNYC$booked, dataNYC$NumericID)
+
+
+#combine SNA LGB BUR - 767
+#atl, lax area, chicago, nyc 
+#reconsider segmentation, wider bands - 3 or 4 
+#difference between segments and cities
+
+
+
+ccm3 = mlogit(f1,
+              data = dataNYC[,list(NumericID, propID, booked, spotlight, 
+                                wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+              shape = "long", alt.var = "propID", chid.var = "NumericID")
+
+
+
 
 #cluster1
-NYC1 <- dataNYC[which (dataNYC$AP >15 & dataNYC$LOS >3 & dataNYC$avgPrice_allProps < NYCprice),]
+#NYC1 <- dataNYC[which (dataNYC$AP >15 & dataNYC$LOS >3 & dataNYC$avgPrice_allProps < NYCprice),]
+NYC1 <- dataNYC[which (dataNYC$AP >15 & dataNYC$LOS >3),]
+NYC1 <- unique(NYC1)
+
+setkey(NYC1, NumericID, propID)
+f1 = mFormula(booked ~ -1 + spotlight + 
+                wifi + pool + shuttle + fitness + breakfast + restaurant + parking +
+                rating*fitness + rating*breakfast + rating*restaurant)
+
+ccm3 = mlogit(f1,
+              data = NYC1[,list(NumericID, propID, booked, spotlight, 
+                                wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+              shape = "long", alt.var = "propID", chid.var = "NumericID")
+
+
 
 
 #cluster2
