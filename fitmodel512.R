@@ -68,7 +68,7 @@ col.classes =
 
 ### Read in hotel shopping data
 #shelby
-data = fread ("/users/shelb/Documents/GitHub/Hotel_shop_amenities_full.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
+data = fread ("/users/shelb/Documents/Hotel_shop_amenities_full.csv", header = TRUE, nrows = -1, stringsAsFactors = F,colClasses = col.classes)
 setnames(data, col.names[col.classes != "NULL"])
 
 #olivia
@@ -330,12 +330,30 @@ LAXprice <- mean(dataLAX$minRate)
 #cluster1
 LAX1 <- dataLAX[which (dataLAX$AP < 10 & dataLAX$avgPrice_allProps < LAXprice),]
 
+setkey(LAX1, NumericID, propID)
+
+dataLAXc1 = mlogit(f1,
+                   data = LAX1[,list(NumericID, propID, booked, spotlight, 
+                                     wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                   shape = "long", alt.var = "propID", chid.var = "NumericID")
+
 #cluster2
 LAX2 <- dataLAX[which (dataLAX$AP < 10 & dataLAX$avgPrice_allProps > LAXprice),]
+setkey(LAX2, NumericID, propID)
+
+dataLAXc2 = mlogit(f1,
+                   data = LAX2[,list(NumericID, propID, booked, spotlight, 
+                                     wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                   shape = "long", alt.var = "propID", chid.var = "NumericID")
 
 #cluster3
 LAX3 <- dataLAX[which (dataLAX$AP >= 10),]
+setkey(LAX3, NumericID, propID)
 
+dataLAXc3 = mlogit(f1,
+                   data = LAX3[,list(NumericID, propID, booked, spotlight, 
+                                     wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                   shape = "long", alt.var = "propID", chid.var = "NumericID")
 
 ##CHI
 dataCHI <- data[which(data$cityCd == "CHI"),]
@@ -345,13 +363,29 @@ CHIprice <- mean(dataCHI$minRate)
 
 #cluster1
 CHI1 <- dataCHI[which (dataCHI$AP < 10 & dataCHI$avgPrice_allProps < CHIprice),]
+setkey(CHI1, NumericID, propID)
 
+dataCHIc1 = mlogit(f1,
+                   data = CHI1[,list(NumericID, propID, booked, spotlight, 
+                                     wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                   shape = "long", alt.var = "propID", chid.var = "NumericID")
 #cluster2
 CHI2 <- dataCHI[which (dataCHI$AP < 10 & dataCHI$avgPrice_allProps > CHIprice),]
+setkey(CHI2, NumericID, propID)
+
+dataCHIc2 = mlogit(f1,
+                   data = CHI2[,list(NumericID, propID, booked, spotlight, 
+                                     wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                   shape = "long", alt.var = "propID", chid.var = "NumericID")
 
 #cluster3
 CHI3 <- dataCHI[which (dataCHI$AP >= 10),]
+setkey(CHI3, NumericID, propID)
 
+dataCHIc3 = mlogit(f1,
+                   data = CHI3[,list(NumericID, propID, booked, spotlight, 
+                                     wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
+                   shape = "long", alt.var = "propID", chid.var = "NumericID")
 
 #########old clusters!!!!!!!!!!!!!!!########
 #cluster1
