@@ -253,43 +253,14 @@ ccm3 = mlogit(f1,
               shape = "long", alt.var = "propID", chid.var = "NumericID")
 
 
-
-
 #cluster1
-#NYC1 <- dataNYC[which (dataNYC$AP >15 & dataNYC$LOS >3 & dataNYC$avgPrice_allProps < NYCprice),]
-NYC1 <- dataNYC[which (dataNYC$AP >15 & dataNYC$LOS >3),]
-NYC1 <- unique(NYC1)
-
-setkey(NYC1, NumericID, propID)
-f1 = mFormula(booked ~ -1 + spotlight + 
-                wifi + pool + shuttle + fitness + breakfast + restaurant + parking +
-                rating*fitness + rating*breakfast + rating*restaurant)
-
-ccm3 = mlogit(f1,
-              data = NYC1[,list(NumericID, propID, booked, spotlight, 
-                                wifi, pool, shuttle, fitness, breakfast, restaurant, parking, rating)], 
-              shape = "long", alt.var = "propID", chid.var = "NumericID")
-
-
-
+NYC1 <- dataNYC[which (dataNYC$AP < 10 & dataNYC$avgPrice_allProps < NYCprice),]
 
 #cluster2
-NYC2 <- dataNYC[which (dataNYC$AP >15 & dataNYC$LOS >3 &  dataNYC$avgPrice_allProps > NYCprice),]
+NYC2 <- dataNYC[which (dataNYC$AP < 10 & dataNYC$avgPrice_allProps > NYCprice),]
 
 #cluster3
-NYC3 <- dataNYC[which (dataNYC$AP > 10 & dataNYC$LOS < 3 &  dataNYC$avgPrice_allProps < NYCprice),]
-
-
-#cluster4
-NYC4 <- dataNYC[which (dataNYC$AP > 10 & dataNYC$LOS < 3 &  dataNYC$avgPrice_allProps > NYCprice),]
-
-
-#cluster5
-NYC5 <- dataNYC[which (dataNYC$AP > 5 & dataNYC$LOS < 5),]
-
-
-#cluster6
-NYC6 <- dataNYC[which (dataNYC$AP < 5 & dataNYC$LOS < 3),]
+NYC3 <- dataNYC[which (dataNYC$AP >= 10),]
 
 
 
@@ -321,40 +292,10 @@ ATL5 <- dataATL[which (dataATL$AP > 5 & dataATL$LOS < 5),]
 #cluster6
 ATL6 <- dataATL[which (dataATL$AP < 5 & dataATL$LOS < 3),]
 
-##BUR
-dataBUR <- data[which(data$cityCd == "BUR"),]
+##LAX AREA
+dataLAX <- data[which(data$cityCd == "BUR" | data$cityCd == "LGB" | data$cityCd == "SNA" | data$cityCd == "LAX"),]
 #need to calculate average price of a hotel in BUR
-BURprice <- mean(dataBUR$minRate)
-
-
-#cluster1
-BUR1 <- dataBUR[which (dataBUR$AP >15 & dataBUR$LOS >3 & dataBUR$avgPrice_allProps < BURprice),]
-
-
-#cluster2
-BUR2 <- dataBUR[which (dataBUR$AP >15 & dataBUR$LOS >3 &  dataBUR$avgPrice_allProps > BURprice),]
-
-#cluster3
-BUR3 <- dataBUR[which (dataBUR$AP > 10 & dataBUR$LOS < 3 &  dataBUR$avgPrice_allProps < BURprice),]
-
-
-#cluster4
-BUR4 <- dataBUR[which (dataBUR$AP > 10 & dataBUR$LOS < 3 &  dataBUR$avgPrice_allProps > BURprice),]
-
-
-#cluster5
-BUR5 <- dataBUR[which (dataBUR$AP > 5 & dataBUR$LOS < 5),]
-
-
-#cluster6
-BUR6 <- dataBUR[which (dataBUR$AP < 5 & dataBUR$LOS < 3),]
-
-
-##LAX
-dataLAX <- data[which(data$cityCd == "LAX"),]
-#need to calculate average price of a hotel in LAX
 LAXprice <- mean(dataLAX$minRate)
-
 
 #cluster1
 LAX1 <- dataLAX[which (dataLAX$AP >15 & dataLAX$LOS >3 & dataLAX$avgPrice_allProps < LAXprice),]
@@ -377,34 +318,8 @@ LAX5 <- dataLAX[which (dataLAX$AP > 5 & dataLAX$LOS < 5),]
 
 #cluster6
 LAX6 <- dataLAX[which (dataLAX$AP < 5 & dataLAX$LOS < 3),]
-  
-##SNA
-dataSNA <- data[which(data$cityCd == "SNA"),]
-#need to calculate average price of a hotel in SNA
-SNAprice <- mean(dataSNA$minRate)
 
 
-#cluster1
-SNA1 <- dataSNA[which (dataSNA$AP >15 & dataSNA$LOS >3 & dataSNA$avgPrice_allProps < SNAprice),]
-
-
-#cluster2
-SNA2 <- dataSNA[which (dataSNA$AP >15 & dataSNA$LOS >3 &  dataSNA$avgPrice_allProps > SNAprice),]
-
-#cluster3
-SNA3 <- dataSNA[which (dataSNA$AP > 10 & dataSNA$LOS < 3 &  dataSNA$avgPrice_allProps < SNAprice),]
-
-
-#cluster4
-SNA4 <- dataSNA[which (dataSNA$AP > 10 & dataSNA$LOS < 3 &  dataSNA$avgPrice_allProps > SNAprice),]
-
-
-#cluster5
-SNA5 <- dataSNA[which (dataSNA$AP > 5 & dataSNA$LOS < 5),]
-
-
-#cluster6
-SNA6 <- dataSNA[which (dataSNA$AP < 5 & dataSNA$LOS < 3),]
 
 ##CHI
 dataCHI <- data[which(data$cityCd == "CHI"),]
@@ -433,31 +348,3 @@ CHI5 <- dataCHI[which (dataCHI$AP > 5 & dataCHI$LOS < 5),]
 
 #cluster6
 CHI6 <- dataCHI[which (dataCHI$AP < 5 & dataCHI$LOS < 3),]
-
-##LGB
-dataLGB <- data[which(data$cityCd == "LGB"),]
-#need to calculate average price of a hotel in LGB
-LGBprice <- mean(dataLGB$minRate)
-
-
-#cluster1
-LGB1 <- dataLGB[which (dataLGB$AP >15 & dataLGB$LOS >3 & dataLGB$avgPrice_allProps < LGBprice),]
-
-
-#cluster2
-LGB2 <- dataLGB[which (dataLGB$AP >15 & dataLGB$LOS >3 &  dataLGB$avgPrice_allProps > LGBprice),]
-
-#cluster3
-LGB3 <- dataLGB[which (dataLGB$AP > 10 & dataLGB$LOS < 3 &  dataLGB$avgPrice_allProps < LGBprice),]
-
-
-#cluster4
-LGB4 <- dataLGB[which (dataLGB$AP > 10 & dataLGB$LOS < 3 &  dataLGB$avgPrice_allProps > LGBprice),]
-
-
-#cluster5
-LGB5 <- dataLGB[which (dataLGB$AP > 5 & dataLGB$LOS < 5),]
-
-
-#cluster6
-LGB6 <- dataLGB[which (dataLGB$AP < 5 & dataLGB$LOS < 3),]
