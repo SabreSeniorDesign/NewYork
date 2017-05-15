@@ -265,6 +265,7 @@ NYC3 <- dataNYC[which (dataNYC$AP >= 10),]
 
 ##ATL
 dataATL <- data[which(data$cityCd == "ATL"),]
+dataATL$cityCd <- NULL
 #need to calculate average price of a hotel in ATL
 ATLprice <- mean(dataATL$minRate)
 
@@ -280,6 +281,7 @@ ATL3 <- dataATL[which (dataATL$AP >= 10),]
 
 ##LAX AREA
 dataLAX <- data[which(data$cityCd == "BUR" | data$cityCd == "LGB" | data$cityCd == "SNA" | data$cityCd == "LAX"),]
+dataLAX$cityCd <- NULL
 #need to calculate average price of a hotel in BUR
 LAXprice <- mean(dataLAX$minRate)
 
@@ -295,6 +297,7 @@ LAX3 <- dataLAX[which (dataLAX$AP >= 10),]
 
 ##CHI
 dataCHI <- data[which(data$cityCd == "CHI"),]
+dataCHI$cityCd <- NULL
 #need to calculate average price of a hotel in CHI
 CHIprice <- mean(dataCHI$minRate)
 
